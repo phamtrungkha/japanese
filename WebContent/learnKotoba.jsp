@@ -110,8 +110,13 @@
 			var end = <%=size%>-1;
 			var remainWord = <%=size%>;
 			var i = 0;
+			var done = true;
+			var index = Math.floor((Math.random() * obj.kotobas.length));
+        	$("#answer").hide();
 			if (!$('#typing').is(":checked")){
 	    		$("#toLGInput").hide();
+	    		nextWord();
+				done = true;
 	    	}
 			$("#group").change(function() {
 				$("#group option:selected").each(function() {
@@ -138,24 +143,12 @@
 			    });
 			  });
 			
-			var done = true;
-			var index = Math.floor((Math.random() * obj.kotobas.length));
 			
 		    $("#next").click(function(e){
 		    	
-		    	if ($('#typing').is(":checked")){
-			        $("#toLG").hide();
-		    		$("#toLGInput").show();
-		    	}
-		    	else{
+		    	if (!$('#typing').is(":checked")){
 		    		nextWord();
-		    		$("#ketqua").hide();
-		    		$("#toLGInput").hide();
 			        $("#toLG").toggle();
-			        if ($('#toLG').is(":visible"))
-			        	$("#typing").show();
-			        else
-			        	$("#typing").hide();
 		    	}
 	    	});
 
@@ -163,28 +156,44 @@
 	    		$("#ketqua").show();
 		    
 		    	if($("#toLGInput").val().localeCompare(obj.kotobas[index].jp) == 0){
+	            	$("#answer").hide();
 		    		$("#ketqua").text("True");
-		    		done = true;
 		    		nextWord();
+		    		done = true;
 		    	}
 		    	else {
-	    			alert(obj.kotobas[index].jp);
 		    		$("#ketqua").text("False");
+		    		$('#toLGInput').val("");
+	            	$("#answer").show();
 		    	}
 		    });
 	    	$('#toLGInput').keyup(function(e){
-	    	    if(e.keyCode == 13)
+	    	    if(e.keyCode == 16)
 	    	    {
 	    	        $(this).trigger("enterKey");
 	    	    }
 	    	});
 	    	
-	    	$('#checkbox1').change(function() {
+			$("#answer").click(function(e){
+    			alert(obj.kotobas[index].jp);
+	    	});
+	    	
+	    	$('#typing').change(function() {
+            	$("#answer").hide();
 	            if($(this).is(":checked")) {
-	                var returnVal = confirm("Are you sure?");
-	                $(this).attr("checked", returnVal);
+	            	$("#toLGInput").show();
+		    		$("#ketqua").show();
+	            	$("#toLG").hide();
+	            	$("#next").hide();
+		    		done = true;
+		    		nextWord();
 	            }
-	            $('#textbox1').val($(this).is(':checked'));        
+	            else{
+	            	$("#toLGInput").hide();
+		    		$("#ketqua").hide();
+	            	$("#toLG").show();
+	            	$("#next").show();
+	            }
 	        });
 	    	
 	    	function nextWord(){
@@ -283,7 +292,7 @@
 			  		<p id="toLG" >To languge</p><br/>
 			  	</div>
 			  	<div>
-			  		<input type="text" id="toLGInput"/>			  		
+			  		<input type="text" id="toLGInput"/><button id="answer">Answer</button>			  		
 			  	</div>
 			  	<p id="ketqua"></p>
 	</body>
