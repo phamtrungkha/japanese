@@ -8,7 +8,7 @@
 	<%
 		//String level = (String) request.getAttribute("level"); 
 		ArrayList<Kanji> kanjis = (ArrayList<Kanji>) request.getAttribute("kanjis");
-		String kanjisStr = (new Function()).tostringKanji(kanjis);
+		String kanjisStr = (new Function()).toJSONKanji(kanjis);
 		int size = kanjis.size();
 		Random random = new Random();
 		int index = 0;
@@ -20,7 +20,7 @@
 		<style>
 		body {
 		    background-color: #d0e4fe;
-		    font-size: 30px;
+		    font-size: 20px;
 		}
 		
 		h3 {
@@ -30,13 +30,13 @@
 		
 		#vietnamese {
 		    font-family: "Times New Roman";
-		    font-size: 30px;
+		    font-size: 20px;
 			padding-left: 20px;
 		}
 		
 		#japanese {
 		    font-family: "Times New Roman";
-		    font-size: 40px;
+		    font-size: 20px;
 			padding-left: 20px;
 		}
 		
@@ -50,41 +50,7 @@
 		}
 		</style>
 		<script type="text/javascript">
-			var i;
-			var kanji1 = "<%=kanjisStr%>";
-			var kanji2 = kanji1.split(",");
-			var text = '';
-			var block =  4;
-			var kanjis = text.concat('{"kanjis":[');
-			for	(i = 0; i < kanji2.length/block; i++) {
-				kanjis = kanjis.concat('{')
-				
-				kanjis = kanjis.concat('"id":"');
-				kanjis = kanjis.concat(kanji2[i*block+0]);
-				kanjis = kanjis.concat('",');
-				
-				kanjis = kanjis.concat('"jp":"');
-				kanjis = kanjis.concat(kanji2[i*block+1]);
-				kanjis = kanjis.concat('",');
-				
-				kanjis = kanjis.concat('"vn":"');
-				kanjis = kanjis.concat(kanji2[i*block+2]);
-				kanjis = kanjis.concat('",');
-				
-				kanjis = kanjis.concat('"ignoreword":"');
-				kanjis = kanjis.concat('false');
-				kanjis = kanjis.concat('"');
-				
-				if (i == kanji2.length/block-1)
-					kanjis = kanjis.concat('}');
-				else
-					kanjis = kanjis.concat('},');
-			}
-			kanjis = kanjis.concat(']}');
-			console.log("--------");
-			console.log(kanjis);
-			console.log("--------");
-			
+			var kanjis = "<%=kanjisStr%>";
 			obj = JSON.parse(kanjis);
 			console.log("++++++++++");
 			console.log(obj);
@@ -93,66 +59,202 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<script>
 		$(document).ready(function(){
+			var scope = 0;
+			var start = 0;
+			var end = <%=size%>-1;
+			var remainWord = <%=size%>;
+			var i = 0;
 			var done = true;
 			var index = Math.floor((Math.random() * obj.kanjis.length));
-		    $("#next").click(function(){
+        	$("#answer").hide();
+			if (!$('#typing').is(":checked")){
+	    		$("#toLGInput").hide();
+	    		nextWord();
+				done = true;
+	    	}
+			$("#group").change(function() {
+				$("#group option:selected").each(function() {
+					scope = $(this).val();
+					for (i = 0; i < <%=size%>; i++){
+						obj.kanjis[i].ignore = "false";
+					}
+					if (scope == <%=size%>){
+						start = 0;
+						end = scope-1;
+						remainWord = <%=size%>;
+					}
+					else if (scope == <%=size/25%>){
+						start = scope*25;
+						end = <%=size%>-1;
+						remainWord = <%=size%> - scope*25;
+					}
+					else {
+						start = scope*25;
+						end = start + 24;
+						remainWord = 25;
+					}
+					$("#remainWord").text(remainWord);
+			    });
+			  });
+			
+			
+		    $("#next").click(function(e){
+		    	
+		    	if (!$('#typing').is(":checked")){
+		    		nextWord();
+			        $("#toLG").toggle();
+			        $("#toLG2").toggle();
+		    	}
+	    	});
+
+		    $('#toLGInput').bind("enterKey",function(e){
+	    		$("#ketqua").show();
+		    	if($("#toLGInput").val().localeCompare($("#toLG").text()) == 0){
+	            	$("#answer").hide();
+		    		$("#ketqua").text("True");
+		    		nextWord();
+		    		done = true;
+		    	}
+		    	else {
+		    		$("#ketqua").text("False");
+		    		$('#toLGInput').val("");
+	            	$("#answer").show();
+		    	}
+		    });
+	    	$('#toLGInput').keyup(function(e){
+	    	    if(e.keyCode == 16)
+	    	    {
+	    	        $(this).trigger("enterKey");
+	    	    }
+	    	});
+	    	
+			$("#answer").click(function(e){
+    			alert($("#toLG").text());
+	    	});
+	    	
+	    	$('#typing').change(function() {
+            	$("#answer").hide();
+	            if($(this).is(":checked")) {
+	            	$("#toLGInput").show();
+		    		$("#ketqua").show();
+	            	$("#toLG").hide();
+	            	$("#toLG2").hide();
+	            	$("#next").hide();
+		    		done = true;
+		    		nextWord();
+	            }
+	            else{
+	            	$("#toLGInput").hide();
+		    		$("#ketqua").hide();
+	            	$("#toLG").show();
+	            	$("#toLG2").show();
+	            	$("#next").show();
+	            }
+	        });
+	    	
+	    	function nextWord(){
 		    	if ($('#ignorethisword').is(":checked")){
-	    			obj.kanjis[index].ignoreword = "true";
+	    			obj.kanjis[index].ignore = "true";
 	    			$('#ignorethisword').prop('checked', false);
-    				//alert("kkkkkkkkkkkk");
+	    			remainWord--;
 	    		}
 		    	if (done){
-		    		index = Math.floor((Math.random() * obj.kanjis.length));
+		    		index = start + Math.floor((Math.random() * (end - start +1)));
 		    		if ($('#ignore').is(":checked")){
 		    			var k = true;
 		    			while (k){
-		    				if (obj.kanjis[index].ignoreword.localeCompare("true") == 0)
-		    					index = Math.floor((Math.random() * obj.kanjis.length));
+		    				if (remainWord == 1){
+		    					for (i = start; i <= end; i++){
+		    						obj.kanjis[i].ignore = "false";
+		    					}
+		    					remainWord = end-start+1;
+		    				}
+		    				else if (obj.kanjis[index].ignore.localeCompare("true") == 0)
+		    					index = start + Math.floor((Math.random() * (end - start +1)));
 		    				else
 		    					k = false;
 		    			}
 		    		}
-		    		$("#vietnamese").text(obj.kanjis[index].vn);
-		    		$("#japanese").text(obj.kanjis[index].jp);
+		    		if ($("#from option:selected").val().localeCompare("kanji") == 0){
+		    			$("#fromLG").text(obj.kanjis[index].kanji);
+			    		$("#toLG").text(obj.kanjis[index].jp);
+			    		$("#toLG2").text(obj.kanjis[index].vn);
+		    		}
+		    		else {
+		    			$("#fromLG").text(obj.kanjis[index].jp);
+			    		$("#toLG").text(obj.kanjis[index].kanji);
+			    		$("#toLG2").text(obj.kanjis[index].vn);
+		    		}
+		    		
 		    	}
-		        $("#jp").toggle();
+		    	$("#toLGInput").val("");
+			    $("#remainWord").text(remainWord);
 		        done = !done;
-		        //alert($('#ignorethisword').is(":checked"));
-		    });
+		    }
 		});
+		</script>
+		<script>
+		
+	    
 		</script>
 	</head>
 	<body>
 		<input type="hidden" id="isView" value=<%=(new Random()).nextInt(10) %>>
 		<h3>Learn Vocabulary</h3>
-		
-			<fieldset>
-			  	<legend>Option</legend>
-			  	<table id = "option">
+				<table>
 			  		<tr>
-			  			<td>		</td>
+			  			<td>Option: </td>
 			  			<td><input type="checkbox" id="ignore" checked="checked"/> Ignore</td>
-			  			<td><input type="checkbox" name="typing"/> Typing</td>
 			  		</tr>
-			  		
+			  		<tr>
+			  			<td></td>
+			  			<td><input type="checkbox" id="typing"/> Typing</td>
+			  		</tr>
+			  		<tr>
+					  	<td>Learning:</td>
+					  	<td>
+						  	<select id="group" name="group">
+						  		<option value="<%=size%>">all</option>
+				  			<%
+				  				for (int i = 0; i < size/25; i++){%>
+				  					<option value="<%=i%>"><%=i*25 %> - <%=i*25+24 %></option>
+				  			<%	}%>
+				  				<option value="<%=size/25%>"><%=size/25*25 %> - <%=size-1 %></option>
+							</select><br/>
+						</td>
+					</tr>
+					<tr>
+					  	<td>From: </td>
+					  	<td>
+						  	<select id="from">
+						  		<option value="kanji" selected="selected">Kanji</option>
+						  		<option value="jp">Japanese</option>
+							</select><br/>
+						</td>
+					</tr>
+					<tr>
+					  	<td>To: </td>
+					  	<td>
+						  	<select id="to">
+						  		<option value="jp" selected="selected">Japanese</option>
+						  		<option value="kanji">Kanji</option>
+							</select><br/>
+						</td>
+					</tr>
 				</table>
-			</fieldset>
-			<fieldset>
-			  	<legend>Learning</legend>
-					  	
-					  	<button id="next">Next</button>
-		  				<div>
-				  			<p id="vietnamese">vietnamese</p>
-				  		</div>
-				  		<div id="jp">
-					  		<p id="japanese" >japanese</p>
-			  				<input type="checkbox" id="ignorethisword" /> Ignore this word.
-					  	</div>
-
-			</fieldset>
-			<tr>
-				<td></td>
-				<td></td>
-			</tr>
+			  	Remain word: <label id="remainWord"><%=size %></label><br/>
+			  	<button id="next">Next</button><input type="checkbox" id="ignorethisword" /> <label for="ignorethisword">Ignore this word.</label>
+  				<br/><br/><div id="fromLG">From languge
+		  		</div>
+		  		<div >
+			  		<p id="toLG" >To languge</p>
+			  	</div>
+		  		<div>
+			  		<p id="toLG2" >To languge2</p><br/>
+			  	</div>
+			  	<div>
+			  		<input type="text" id="toLGInput"/><button id="answer">Answer</button>			  		
+			  	</div>
+			  	<p id="ketqua"></p>
 	</body>
 </html>

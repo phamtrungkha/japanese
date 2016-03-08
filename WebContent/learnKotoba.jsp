@@ -8,7 +8,7 @@
 	<%
 		String lesson = (String) request.getAttribute("lesson"); 
 		ArrayList<Kotoba> kotobas = (ArrayList<Kotoba>) request.getAttribute("kotobas");
-		String kotobasStr = (new Function()).tostring(kotobas);
+		String kotobasStr = (new Function()).toJSONKotoba(kotobas);
 		int size = kotobas.size();
 		Random random = new Random();
 		int index = 0;
@@ -20,83 +20,10 @@
 		<style>
 		body {
 		    background-color: #d0e4fe;
-		    font-size: 20px;
-		}
-		
-		h3 {
-		    color: orange;
-		    text-align: center;
-		}
-		
-		#vietnamese {
-		    font-family: "Times New Roman";
-		    font-size: 20px;
-			padding-left: 20px;
-		}
-		
-		#japanese {
-		    font-family: "Times New Roman";
-		    font-size: 20px;
-			padding-left: 20px;
-		}
-		
-		#ignorethisword {
-		    font-family: "Times New Roman";
-		    font-size: 10px;
-			padding-left: 20px;
-		}
-		#option {
-			padding-left: 20px;
 		}
 		</style>
 		<script type="text/javascript">
-			var i;
-			var kotoba1 = "<%=kotobasStr%>";
-			var kotoba2 = kotoba1.split("^");
-			var text = '';
-			var block =  7;
-			var kotobas = text.concat('{"kotobas":[');
-			for	(i = 0; i < kotoba2.length/block; i++) {
-				kotobas = kotobas.concat('{')
-				
-				kotobas = kotobas.concat('"id":"');
-				kotobas = kotobas.concat(kotoba2[i*block+0]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"jp":"');
-				kotobas = kotobas.concat(kotoba2[i*block+1]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"vn":"');
-				kotobas = kotobas.concat(kotoba2[i*block+2]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"en":"');
-				kotobas = kotobas.concat(kotoba2[i*block+3]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"typeword":"');
-				kotobas = kotobas.concat(kotoba2[i*block+4]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"lesson":"');
-				kotobas = kotobas.concat(kotoba2[i*block+5]);
-				kotobas = kotobas.concat('",');
-				
-				kotobas = kotobas.concat('"ignore":"');
-				kotobas = kotobas.concat(kotoba2[i*block+6]);
-				kotobas = kotobas.concat('"');
-				
-				if (i == kotoba2.length/block-1)
-					kotobas = kotobas.concat('}');
-				else
-					kotobas = kotobas.concat('},');
-			}
-			kotobas = kotobas.concat(']}');
-			console.log("--------");
-			console.log(kotobas);
-			console.log("--------");
-			
+			var kotobas = "<%=kotobasStr%>";
 			obj = JSON.parse(kotobas);
 			console.log("++++++++++");
 			console.log(obj);
@@ -154,8 +81,7 @@
 
 		    $('#toLGInput').bind("enterKey",function(e){
 	    		$("#ketqua").show();
-		    
-		    	if($("#toLGInput").val().localeCompare(obj.kotobas[index].jp) == 0){
+		    	if($("#toLGInput").val().localeCompare($("#toLG").text()) == 0){
 	            	$("#answer").hide();
 		    		$("#ketqua").text("True");
 		    		nextWord();
@@ -175,7 +101,7 @@
 	    	});
 	    	
 			$("#answer").click(function(e){
-    			alert(obj.kotobas[index].jp);
+    			alert($("#toLG").text());
 	    	});
 	    	
 	    	$('#typing').change(function() {
@@ -227,17 +153,12 @@
 		    			$("#fromLG").text(obj.kotobas[index].jp);
 			    		$("#toLG").text(obj.kotobas[index].vn);
 		    		}
-		    		
 		    	}
 		    	$("#toLGInput").val("");
 			    $("#remainWord").text(remainWord);
 		        done = !done;
 		    }
 		});
-		</script>
-		<script>
-		
-	    
 		</script>
 	</head>
 	<body>

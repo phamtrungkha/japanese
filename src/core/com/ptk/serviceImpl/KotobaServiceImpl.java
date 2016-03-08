@@ -33,6 +33,10 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 		}
 		return result;
 	}
+	public Kotoba getByJp(String jp) {
+		Kotoba kotoba = kotobaDao.getByJp(jp);
+		return kotoba;
+	}
 	private List<Kotoba> appendList(List<Kotoba> list1, List<Kotoba> list2) {
 		List<Kotoba> result = new ArrayList<>();
 		for (int i = 0; i < list1.size(); i++)

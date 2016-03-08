@@ -18,8 +18,8 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 	private static final String SELECT_BY_KANJI = "SELECT * FROM kanji_root WHERE kanji = ?";
 	private static final String SELECT_BY_ID = "SELECT * FROM kanji_root WHERE id = ?";
 	Connection con = null;
-	public KanjiRootDaoImpl() {
-		con = getConnection();
+	public KanjiRootDaoImpl(Connection conn) {
+		con = conn;
 	}
 
 	private final String INSERT = "INSERT INTO kotoba(jp, vn, en, typeword, lesson, ignoreword) VALUES(?,?,?,?,?,?)";

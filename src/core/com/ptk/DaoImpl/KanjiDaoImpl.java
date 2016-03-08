@@ -16,8 +16,8 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 	
 	private static final String SELECT_BY_LEVEL = "SELECT * FROM kanji WHERE level = ?";
 	Connection con = null;
-	public KanjiDaoImpl() {
-		con = getConnection();
+	public KanjiDaoImpl(Connection conn) {
+		con = conn;
 	}
 
 	private final String INSERT = "INSERT INTO kanji(kanji, kotoba_id, kanji_root_id) VALUES(?,?,?)";
@@ -65,8 +65,8 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 				Kanji kanji = new Kanji();
 				kanji.setId(rs.getInt(1));
 				kanji.setKanji(rs.getString(2));
-				//kanji.setKotoba((new KotobaDaoImpl()).getById(rs.getInt(3)));
-				kanji.setKanjiRoot((new KanjiRootDaoImpl()).getById(rs.getInt(4)));
+				kanji.setKotoba((new KotobaDaoImpl(con)).getById(rs.getInt(3)));
+				kanji.setKanjiRoot((new KanjiRootDaoImpl(con)).getById(rs.getInt(4)));
 				kanji.setLevel(level);
 				result.add(kanji);
 			}

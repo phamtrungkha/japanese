@@ -28,39 +28,48 @@ public class Function {
 		(new Function()).importDBFromExcel(9,5,KOTOBA);
 	}
 
-	public String tostring(ArrayList<Kotoba> kotobas) {
+	public String toJSONKotoba(ArrayList<Kotoba> kotobas){
 		
-		String result = "";
+		String result = "{'kotobas':[";
 		for (int i = 0; i < kotobas.size(); i++){
-			result += (kotobas.get(i).getId() + RANH);
-			result += (kotobas.get(i).getJp() + RANH);
-			result += (kotobas.get(i).getVn() + RANH);
-			result += (kotobas.get(i).getEn() + RANH);
-			result += (kotobas.get(i).getTypeword().getName() + RANH);
-			result += (kotobas.get(i).getLesson() + RANH);
-			result += (kotobas.get(i).isIgnoreword() + RANH);
+			result += "{";
+			result += "'id':'" + kotobas.get(i).getId() + "',";
+			result += "'jp':'" + kotobas.get(i).getJp() + "',";
+			result += "'vn':'" + kotobas.get(i).getVn() + "',";
+			result += "'en':'" + kotobas.get(i).getEn() + "',";
+			result += "'typeword':'" + kotobas.get(i).getTypeword().getName() + "',";
+			result += "'lesson':'" + kotobas.get(i).getLesson() + "',";
+			result += "'ignore':'" + kotobas.get(i).isIgnoreword() + "'";
+			if (i == kotobas.size()-1)
+				result += "}";
+			else
+				result += "},";
 		}
-		result = result.substring(0, result.length()-1);
-		return result;
-	}
-
-	public String tostringKanji(ArrayList<Kanji> kanjis) {
-		
-		String result = "";
-		for (int i = 0; i < kanjis.size(); i++){
-			result += (kanjis.get(i).getId() + RANH);
-			result += (kanjis.get(i).getKanji() + RANH);
-			result += (kanjis.get(i).getKotoba().getJp() + RANH);
-			result += (kanjis.get(i).getKotoba().getVn() + RANH);
-//			result += (kanjis.get(i).getEn() + ",");
-//			result += (kanjis.get(i).getTypeword().getName() + ",");
-//			result += (kanjis.get(i).getLesson() + ",");
-//			result += (kanjis.get(i).isIgnore() + ",");
-		}
-		result = result.substring(0, result.length()-1);
+		result += "]}";
+		result = result.replaceAll("\'", "\\\\\"");		
 		return result;
 	}
 	
+	public String toJSONKanji(ArrayList<Kanji> kanjis){
+		
+		String result = "{'kanjis':[";
+		for (int i = 0; i < kanjis.size(); i++){
+			result += "{";
+			result += "'id':'" + kanjis.get(i).getId() + "',";
+			result += "'kanji':'" + kanjis.get(i).getKanji() + "',";
+			result += "'jp':'" + kanjis.get(i).getKotoba().getJp() + "',";
+			result += "'vn':'" + kanjis.get(i).getKotoba().getVn() + "',";
+			result += "'ignore':'false'";
+			if (i == kanjis.size()-1)
+				result += "}";
+			else
+				result += "},";
+		}
+		result += "]}";
+		result = result.replaceAll("\'", "\\\\\"");		
+		return result;
+	}
+
 	public void importDBFromExcel(int bai, int sheet, int types) throws IOException{
 		FileInputStream fileInputStream = new FileInputStream("db/"+bai+".xls");
 		HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);

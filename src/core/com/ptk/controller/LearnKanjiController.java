@@ -38,7 +38,7 @@ public class LearnKanjiController extends HttpServlet {
 		int[] levels = new int[levelStr.length];
 		for (int i = 0; i < levelStr.length; i++)
 			levels[i] = Integer.parseInt(levelStr[i]);
-		List<Kanji> kanjis = (new KanjiServiceImpl()).getByLesson(levels);
+		List<Kanji> kanjis = (new KanjiServiceImpl()).getByLevels(levels);
 		request.setAttribute("kanjis", kanjis);
 		request.getRequestDispatcher("./learnKanji.jsp").forward(request, response);
 	}

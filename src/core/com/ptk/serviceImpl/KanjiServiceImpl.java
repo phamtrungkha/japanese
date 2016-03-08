@@ -1,5 +1,6 @@
 package core.com.ptk.serviceImpl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,18 +9,33 @@ import core.com.ptk.DaoImpl.KanjiDaoImpl;
 import core.com.ptk.entity.Kanji;
 import core.com.ptk.service.KanjiService;
 
-public class KanjiServiceImpl implements KanjiService{
+public class KanjiServiceImpl extends CommonServiceImpl implements KanjiService{
 
-	KanjiDao kanjiDao = new KanjiDaoImpl();
+	public KanjiServiceImpl() {
+		super();
+	}
+	KanjiDao kanjiDao = new KanjiDaoImpl(con);
 	public void addKanji(Kanji kanji) {
 		kanjiDao.insert(kanji);
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public List<Kanji> getByLesson(int[] levels) {
+	public List<Kanji> getByLevels(int[] levels) {
 
 		List<Kanji> result  = new ArrayList<>();
 		for (int i = 0; i < levels.length; i++){
 			List<Kanji> kanjii = kanjiDao.getByLevel(levels[i]);
 			result = appendList(result, kanjii);
+		}
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -29,6 +45,12 @@ public class KanjiServiceImpl implements KanjiService{
 			result.add(list1.get(i));
 		for (int i = 0; i < list2.size(); i++)
 			result.add(list2.get(i));
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return result;
 	}
 
