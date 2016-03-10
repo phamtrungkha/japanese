@@ -64,5 +64,11 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 		}
 		return result;
 	}
+	
+	@Override
+	public List<Kotoba> getByTypeword(String typeword) {
+		
+		return null;
+	}
 
 }

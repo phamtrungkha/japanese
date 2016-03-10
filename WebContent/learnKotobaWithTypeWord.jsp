@@ -1,57 +1,30 @@
 <!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
 <%@page import="core.com.util.Function"%>
 <%@page import="java.util.Random"%>
-<%@page import="core.com.ptk.entity.Kanji"%>
+<%@page import="core.com.ptk.entity.Kotoba"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 	<%
-		//String level = (String) request.getAttribute("level"); 
-		ArrayList<Kanji> kanjis = (ArrayList<Kanji>) request.getAttribute("kanjis");
-		String kanjisStr = (new Function()).toJSONKanji(kanjis);
-		int size = kanjis.size();
+		String lesson = (String) request.getAttribute("lesson"); 
+		ArrayList<Kotoba> kotobas = (ArrayList<Kotoba>) request.getAttribute("kotobas");
+		String kotobasStr = (new Function()).toJSONKotoba(kotobas);
+		int size = kotobas.size();
 		Random random = new Random();
 		int index = 0;
 		boolean isView = true;		
 	%>
 
 	<head>
-		<title>Learn Kanji</title>
+		<title>Learn Vocabulary</title>
 		<style>
 		body {
 		    background-color: #d0e4fe;
-		    font-size: 20px;
-		}
-		
-		h3 {
-		    color: orange;
-		    text-align: center;
-		}
-		
-		#vietnamese {
-		    font-family: "Times New Roman";
-		    font-size: 20px;
-			padding-left: 20px;
-		}
-		
-		#japanese {
-		    font-family: "Times New Roman";
-		    font-size: 20px;
-			padding-left: 20px;
-		}
-		
-		#ignorethisword {
-		    font-family: "Times New Roman";
-		    font-size: 10px;
-			padding-left: 20px;
-		}
-		#option {
-			padding-left: 20px;
 		}
 		</style>
 		<script type="text/javascript">
-			var kanjis = "<%=kanjisStr%>";
-			obj = JSON.parse(kanjis);
+			var kotobas = "<%=kotobasStr%>";
+			obj = JSON.parse(kotobas);
 			console.log("++++++++++");
 			console.log(obj);
 			console.log("++++++++++");
@@ -65,7 +38,7 @@
 			var remainWord = <%=size%>;
 			var i = 0;
 			var done = true;
-			var index = Math.floor((Math.random() * obj.kanjis.length));
+			var index = Math.floor((Math.random() * obj.kotobas.length));
         	$("#answer").hide();
 			if (!$('#typing').is(":checked")){
 	    		$("#toLGInput").hide();
@@ -76,7 +49,7 @@
 				$("#group option:selected").each(function() {
 					scope = $(this).val();
 					for (i = 0; i < <%=size%>; i++){
-						obj.kanjis[i].ignore = "false";
+						obj.kotobas[i].ignore = "false";
 					}
 					if (scope == <%=size%>){
 						start = 0;
@@ -103,7 +76,6 @@
 		    	if (!$('#typing').is(":checked")){
 		    		nextWord();
 			        $("#toLG").toggle();
-			        $("#toLG2").toggle();
 		    	}
 	    	});
 
@@ -138,7 +110,6 @@
 	            	$("#toLGInput").show();
 		    		$("#ketqua").show();
 	            	$("#toLG").hide();
-	            	$("#toLG2").hide();
 	            	$("#next").hide();
 		    		done = true;
 		    		nextWord();
@@ -147,14 +118,13 @@
 	            	$("#toLGInput").hide();
 		    		$("#ketqua").hide();
 	            	$("#toLG").show();
-	            	$("#toLG2").show();
 	            	$("#next").show();
 	            }
 	        });
 	    	
 	    	function nextWord(){
 		    	if ($('#ignorethisword').is(":checked")){
-	    			obj.kanjis[index].ignore = "true";
+	    			obj.kotobas[index].ignore = "true";
 	    			$('#ignorethisword').prop('checked', false);
 	    			remainWord--;
 	    		}
@@ -165,37 +135,30 @@
 		    			while (k){
 		    				if (remainWord == 1){
 		    					for (i = start; i <= end; i++){
-		    						obj.kanjis[i].ignore = "false";
+		    						obj.kotobas[i].ignore = "false";
 		    					}
 		    					remainWord = end-start+1;
 		    				}
-		    				else if (obj.kanjis[index].ignore.localeCompare("true") == 0)
+		    				else if (obj.kotobas[index].ignore.localeCompare("true") == 0)
 		    					index = start + Math.floor((Math.random() * (end - start +1)));
 		    				else
 		    					k = false;
 		    			}
 		    		}
-		    		if ($("#from option:selected").val().localeCompare("kanji") == 0){
-		    			$("#fromLG").text(obj.kanjis[index].kanji);
-			    		$("#toLG").text(obj.kanjis[index].jp);
-			    		$("#toLG2").text(obj.kanjis[index].vn);
+		    		if ($("#from option:selected").val().localeCompare("vn") == 0){
+		    			$("#fromLG").text(obj.kotobas[index].vn);
+			    		$("#toLG").text(obj.kotobas[index].jp);
 		    		}
 		    		else {
-		    			$("#fromLG").text(obj.kanjis[index].jp);
-			    		$("#toLG").text(obj.kanjis[index].kanji);
-			    		$("#toLG2").text(obj.kanjis[index].vn);
+		    			$("#fromLG").text(obj.kotobas[index].jp);
+			    		$("#toLG").text(obj.kotobas[index].vn);
 		    		}
-		    		
 		    	}
 		    	$("#toLGInput").val("");
 			    $("#remainWord").text(remainWord);
 		        done = !done;
 		    }
 		});
-		</script>
-		<script>
-		
-	    
 		</script>
 	</head>
 	<body>
@@ -227,7 +190,7 @@
 					  	<td>From: </td>
 					  	<td>
 						  	<select id="from">
-						  		<option value="kanji" selected="selected">Kanji</option>
+						  		<option value="vn" selected="selected">Vietnamese</option>
 						  		<option value="jp">Japanese</option>
 							</select><br/>
 						</td>
@@ -237,7 +200,7 @@
 					  	<td>
 						  	<select id="to">
 						  		<option value="jp" selected="selected">Japanese</option>
-						  		<option value="kanji">Kanji</option>
+						  		<option value="vn">Vietnamese</option>
 							</select><br/>
 						</td>
 					</tr>
@@ -246,11 +209,8 @@
 			  	<button id="next">Next</button><input type="checkbox" id="ignorethisword" /> <label for="ignorethisword">Ignore this word.</label>
   				<br/><br/><div id="fromLG">From languge
 		  		</div>
-		  		<div >
-			  		<p id="toLG" >To languge</p>
-			  	</div>
 		  		<div>
-			  		<p id="toLG2" >To languge2</p><br/>
+			  		<p id="toLG" >To languge</p><br/>
 			  	</div>
 			  	<div>
 			  		<input type="text" id="toLGInput"/><button id="answer">Answer</button>			  		

@@ -8,4 +8,5 @@ public interface KotobaService {
 	List<Kotoba> getByLesson(int[] lessons);
 	Kotoba getByJp(String jp);
 	int insert(Kotoba kotoba);
+	List<Kotoba> getByTypeword(String typeword);
 }

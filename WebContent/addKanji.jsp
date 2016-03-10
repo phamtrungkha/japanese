@@ -5,7 +5,7 @@
 <%@page import="core.com.ptk.entity.Typeword"%>
 <html>
 	<head>
-		<title>Add Vocabulary</title>
+		<title>Add Kanji</title>
 	</head>
 	<%
 		String kanjiRoot = (String) request.getAttribute("kanjiRoot"); 
@@ -22,11 +22,11 @@
 			<table>
 				<tr>
 					<td>Kanji</td>
-					<td><input type="text" name="kj"></td>
+					<td><input type="text" name="kj" required></td>
 				</tr>
 				<tr>
 					<td>Japanese</td>
-					<td><input type="text" name="jp"></td>
+					<td><input type="text" name="jp" required></td>
 				</tr>
 				<tr>
 					<td></td>

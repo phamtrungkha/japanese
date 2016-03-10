@@ -19,11 +19,11 @@
 			<table>
 				<tr>
 					<td>Japanese</td>
-					<td><input type="text" name="jp"></td>
+					<td><input type="text" name="jp" required></td>
 				</tr>
 				<tr>
 					<td>Vietnamese</td>
-					<td><input type="text" name="vn"></td>
+					<td><input type="text" name="vn" required></td>
 				</tr>
 				<tr>
 					<td>English</td>

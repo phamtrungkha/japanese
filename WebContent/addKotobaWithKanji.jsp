@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>Insert title here</title>
+<title>Add vocabulary with kanji</title>
 </head>
 <%
 		String kanjiRoot = (String) request.getAttribute("kanjiRoot"); 
@@ -24,11 +24,11 @@
 			<table>
 				<tr>
 					<td>Japanese</td>
-					<td><input type="text" name="jp" value="<%= jp%>"></td>
+					<td><input type="text" name="jp" value="<%= jp%>" required></td>
 				</tr>
 				<tr>
 					<td>Vietnamese</td>
-					<td><input type="text" name="vn"></td>
+					<td><input type="text" name="vn" required></td>
 				</tr>
 				<tr>
 					<td>English</td>

@@ -13,13 +13,13 @@
 						<td>Kanji Root:</td>
 					</tr>
 					<tr>
-						<td><input type="text" name="kanjiRoot"></td>
+						<td><input type="text" name="kanjiRoot" required></td>
 					</tr>
 					<tr>
 						<td>Level:</td>
 					</tr>
 					<tr>
-						<td><input type="text" name="level"></td>
+						<td><input type="text" name="level" required></td>
 					</tr>
 					<tr>
 						<td><input type="submit" value="Add"></td>
@@ -35,7 +35,7 @@
 						<td>Level(EX: 1,2,5,7)</td>
 					</tr>
 					<tr>
-						<td><input type="text" name="level"></td>
+						<td><input type="text" name="level" required></td>
 					</tr>
 					<tr>
 						<td><input type="submit" value="Learn"></td>
