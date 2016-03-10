@@ -51,10 +51,16 @@ public class AddKotobaController extends HttpServlet {
 		kotoba.setEn(request.getParameter("en"));
 		kotoba.setTypeword((new TypewordServiceImpl()).getById(Integer.parseInt(request.getParameter("typeword"))));
 		kotoba.setLesson(Integer.parseInt(request.getParameter("lesson")));
-		(new KotobaServiceImpl()).addKotoba(kotoba);
+		(new KotobaServiceImpl()).insert(kotoba);
 		request.setAttribute("lesson", request.getParameter("lesson"));
 		request.setAttribute("typeword", new TypewordServiceImpl().getAll());
-		request.getRequestDispatcher("./addKotoba.jsp").forward(request, response);
+		if (request.getParameter("kj") == null)
+			request.getRequestDispatcher("./addKotoba.jsp").forward(request, response);
+		else {
+			request.setAttribute("kanjiRoot", request.getParameter("kanjiRoot"));
+			request.setAttribute("level", request.getParameter("level"));
+			request.getRequestDispatcher("./addKanji").forward(request, response);
+		}
 	}
 
 }

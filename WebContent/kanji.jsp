@@ -5,15 +5,18 @@
 		<title>Kanji</title>
 	</head>
 	<body>
-		<form action="addKanji" method="get">
+		<form action="kanji" method="post">
  			<fieldset>
   				<legend>Add Kanji</legend>
   				<table>
 					<tr>
-						<td>Kanji</td>
+						<td>Kanji Root:</td>
 					</tr>
 					<tr>
 						<td><input type="text" name="kanjiRoot"></td>
+					</tr>
+					<tr>
+						<td>Level:</td>
 					</tr>
 					<tr>
 						<td><input type="text" name="level"></td>

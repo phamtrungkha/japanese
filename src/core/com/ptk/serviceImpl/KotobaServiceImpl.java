@@ -15,9 +15,6 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 		super();
 	}
 	KotobaDao kotobaDao = new KotobaDaoImpl(con);
-	public void addKotoba(Kotoba kotoba) {
-		kotobaDao.insert(kotoba);
-	}
 	public List<Kotoba> getByLesson(int[] lessons) {
 
 		List<Kotoba> result  = new ArrayList<>();
@@ -35,6 +32,12 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 	}
 	public Kotoba getByJp(String jp) {
 		Kotoba kotoba = kotobaDao.getByJp(jp);
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return kotoba;
 	}
 	private List<Kotoba> appendList(List<Kotoba> list1, List<Kotoba> list2) {

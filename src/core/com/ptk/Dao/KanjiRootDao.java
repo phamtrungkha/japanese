@@ -1,11 +1,8 @@
 package core.com.ptk.Dao;
 
-import java.util.List;
-
 import core.com.ptk.entity.KanjiRoot;
-import core.com.ptk.entity.Kotoba;
 
-public interface KanjiRootDao extends AbstractDao<Kotoba>{
+public interface KanjiRootDao extends AbstractDao<KanjiRoot>{
 
 	KanjiRoot getByKanji(String kanji);
 

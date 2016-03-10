@@ -7,19 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import core.com.ptk.entity.KanjiRoot;
 import core.com.ptk.serviceImpl.KanjiRootServiceImpl;
 
 /**
- * Servlet implementation class KotobaController
+ * Servlet implementation class AddKanjiRootController
  */
-@WebServlet("/kanji")
-public class KanjiController extends HttpServlet {
+@WebServlet("/addKanjiRoot")
+public class AddKanjiRootController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public KanjiController() {
+    public AddKanjiRootController() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -27,26 +29,31 @@ public class KanjiController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("./kanji.jsp").forward(request, response);
+		request.setAttribute("kanjiRoot", request.getParameter("kanjiRoot"));
+		request.getRequestDispatcher("./addKanjiRoot.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		request.setCharacterEncoding("UTF-8");
-		String kanjiRoot = request.getParameter("kanjiRoot");
+		String kjr = request.getParameter("kanjiRoot");
 		int level = Integer.parseInt(request.getParameter("level"));
-		request.setAttribute("kanjiRoot", kanjiRoot);
+		KanjiRoot kanjiRoot = new KanjiRoot();
+		kanjiRoot.setKanji(kjr);
+		kanjiRoot.setHanTu(request.getParameter("hantu"));
+		kanjiRoot.setAmOn(request.getParameter("amon"));
+		kanjiRoot.setAmKun(request.getParameter("amkun"));
+		kanjiRoot.setMoTa(request.getParameter("mota"));
+		request.setAttribute("kanjiRoot", kjr);
 		request.setAttribute("level", level);
 		
-		if ((new KanjiRootServiceImpl()).getByKanji(kanjiRoot) != null){
+		int addKanjiR = (new KanjiRootServiceImpl()).addKanjiRoot(kanjiRoot);
+		if (addKanjiR != 0)
 			request.getRequestDispatcher("./addKanji.jsp").forward(request, response);
-		}
-		else {
-			request.getRequestDispatcher("./addKanjiRoot.jsp").forward(request, response);
-		}
+		else
+			response.sendRedirect("./Error.jsp");
 	}
 
 }

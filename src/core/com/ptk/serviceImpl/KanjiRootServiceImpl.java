@@ -22,5 +22,15 @@ public class KanjiRootServiceImpl extends CommonServiceImpl implements  KanjiRoo
 		}
 		return kanjiRoot;
 	}
+	public int addKanjiRoot(KanjiRoot kanjiRoot) {
+		int result = kanjiRootDao.insert(kanjiRoot);
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

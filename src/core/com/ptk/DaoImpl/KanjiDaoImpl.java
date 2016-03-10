@@ -15,12 +15,13 @@ import core.com.ptk.entity.Typeword;
 public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 	
 	private static final String SELECT_BY_LEVEL = "SELECT * FROM kanji WHERE level = ?";
+	private static final String SELECT_BY_KANJI = "SELECT * FROM kanji WHERE kanji = ?";
 	Connection con = null;
 	public KanjiDaoImpl(Connection conn) {
 		con = conn;
 	}
 
-	private final String INSERT = "INSERT INTO kanji(kanji, kotoba_id, kanji_root_id) VALUES(?,?,?)";
+	private final String INSERT = "INSERT INTO kanji(kanji, kotoba_id, kanji_root_id, level) VALUES(?,?,?,?)";
 	@Override
 	public List<Kanji> getAll() {
 		// TODO Auto-generated method stub
@@ -30,12 +31,32 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 	@Override
 	public int insert(Kanji kanji) {
 		int result = 0;
+		if (isExistInDB(kanji.getKanji()))
+			return 0;
 		try {
 			PreparedStatement preparedStatement = con.prepareStatement(INSERT);
 			preparedStatement.setString(1, kanji.getKanji());
 			preparedStatement.setInt(2, kanji.getKotoba().getId());
 			preparedStatement.setInt(3, kanji.getKanjiRoot().getId());
+			preparedStatement.setInt(4, kanji.getLevel());
 			result = preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private boolean isExistInDB(String kanji) {
+		boolean result = false;
+		try {
+			PreparedStatement pstm = con.prepareStatement(SELECT_BY_KANJI);
+			pstm.setString(1, kanji);
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()){
+				result = true;
+			}
+			rs.close();
+			pstm.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

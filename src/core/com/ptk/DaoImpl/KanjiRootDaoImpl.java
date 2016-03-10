@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.com.ptk.Dao.KanjiRootDao;
-import core.com.ptk.Dao.KotobaDao;
+import core.com.ptk.Dao.KanjiDao;
 import core.com.ptk.entity.KanjiRoot;
-import core.com.ptk.entity.Kotoba;
+import core.com.ptk.entity.Kanji;
 import core.com.ptk.entity.Typeword;
 
 public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
@@ -22,24 +22,25 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 		con = conn;
 	}
 
-	private final String INSERT = "INSERT INTO kotoba(jp, vn, en, typeword, lesson, ignoreword) VALUES(?,?,?,?,?,?)";
+	private final String INSERT = "INSERT INTO kanji_root(kanji, hantu, amon, amkun, mota) VALUES(?,?,?,?,?)";
 	@Override
-	public List<Kotoba> getAll() {
+	public List<KanjiRoot> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int insert(Kotoba kotoba) {
+	public int insert(KanjiRoot kanjiRoot) {
 		int result = 0;
+		if (isExistInDB(kanjiRoot))
+			return 0;
 		try {
 			PreparedStatement preparedStatement = con.prepareStatement(INSERT);
-			preparedStatement.setString(1, kotoba.getJp());
-			preparedStatement.setString(2, kotoba.getVn());
-			preparedStatement.setString(3, kotoba.getEn());
-			preparedStatement.setInt(4, kotoba.getTypeword().getId());
-			preparedStatement.setInt(5, kotoba.getLesson());
-			preparedStatement.setBoolean(6, kotoba.isIgnoreword());
+			preparedStatement.setString(1, kanjiRoot.getKanji());
+			preparedStatement.setString(2, kanjiRoot.getHanTu());
+			preparedStatement.setString(3, kanjiRoot.getAmOn());
+			preparedStatement.setString(4, kanjiRoot.getAmKun());
+			preparedStatement.setString(5, kanjiRoot.getMoTa());
 			result = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -47,26 +48,44 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 		return result;
 	}
 
+	private boolean isExistInDB(KanjiRoot kanjiRoot) {
+		boolean result = false;
+		try {
+			PreparedStatement pstm = con.prepareStatement(SELECT_BY_KANJI);
+			pstm.setString(1, kanjiRoot.getKanji());
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()){
+				result = true;
+			}
+			rs.close();
+			pstm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	@Override
-	public int update(Kotoba object) {
+	public int update(KanjiRoot kanjiRoot) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int delete(Kotoba object) {
+	public int delete(KanjiRoot kanjiRoot) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public KanjiRoot getByKanji(String kanji) {
-		KanjiRoot result = new KanjiRoot();
+		KanjiRoot result = null;
 		try {
 			PreparedStatement pstm = con.prepareStatement(SELECT_BY_KANJI);
 			pstm.setString(1, kanji);
 			ResultSet rs = pstm.executeQuery();
 			if (rs.next()){
+				result = new KanjiRoot();
 				result.setId(rs.getInt(1));
 				result.setKanji(rs.getString(2));
 				result.setHanTu(rs.getString(3));

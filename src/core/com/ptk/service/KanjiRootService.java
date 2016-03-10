@@ -4,4 +4,5 @@ import core.com.ptk.entity.KanjiRoot;
 
 public interface KanjiRootService {
 	KanjiRoot getByKanji(String kanji);
+	int addKanjiRoot(KanjiRoot kanjiRoot);
 }

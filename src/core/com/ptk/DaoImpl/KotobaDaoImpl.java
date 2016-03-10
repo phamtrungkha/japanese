@@ -16,6 +16,7 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 	private static final String SELECT_BY_LESSON = "SELECT * FROM kotoba WHERE lesson = ?";
 	private static final String SELECT_BY_JP = "SELECT * FROM kotoba WHERE jp = ?";
 	private static final String SELECT_BY_ID = "SELECT * FROM kotoba WHERE id = ?";
+	private static final String SELECT_BY_JP_VN = "SELECT * FROM kotoba WHERE jp = ? and vn = ?";
 	Connection con = null;
 	public KotobaDaoImpl(Connection conn) {
 		con = conn;
@@ -32,6 +33,9 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 	@Override
 	public int insert(Kotoba kotoba) {
 		int result = 0;
+		Kotoba a = getByJp(kotoba.getJp());
+		if (isExistInDB(kotoba))
+			return 0;
 		try {
 			PreparedStatement preparedStatement = con.prepareStatement(INSERT);
 			preparedStatement.setString(1, kotoba.getJp());
@@ -42,6 +46,24 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 			preparedStatement.setBoolean(6, kotoba.isIgnoreword());
 			result = preparedStatement.executeUpdate();
 			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private boolean isExistInDB(Kotoba kotoba) {
+		boolean result = false;
+		try {
+			PreparedStatement pstm = con.prepareStatement(SELECT_BY_JP_VN);
+			pstm.setString(1, kotoba.getJp());
+			pstm.setString(2, kotoba.getVn());
+			ResultSet rs = pstm.executeQuery();
+			if (rs.next()){
+				result = true;
+			}
+			rs.close();
+			pstm.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -90,12 +112,13 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 
 	@Override
 	public Kotoba getByJp(String jp) {
-		Kotoba result = new Kotoba();
+		Kotoba result = null;
 		try {
 			PreparedStatement pstm = con.prepareStatement(SELECT_BY_JP);
 			pstm.setString(1, jp);
 			ResultSet rs = pstm.executeQuery();
 			if (rs.next()){
+				result = new Kotoba();
 				result.setId(rs.getInt(1));
 				result.setJp(rs.getString(2));
 				result.setVn(rs.getString(3));
@@ -137,22 +160,4 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 		
 		return result;
 	}
-
-	public int insert(String jp, String vn, int typ, int bai) {
-		int result = 0;
-		try {
-			PreparedStatement preparedStatement = con.prepareStatement(INSERT_FROM_EXCEL);
-			preparedStatement.setString(1, jp);
-			preparedStatement.setString(2, vn);
-			preparedStatement.setInt(3, typ);
-			preparedStatement.setInt(4, bai);
-			preparedStatement.setBoolean(5, false);
-			result = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
 }

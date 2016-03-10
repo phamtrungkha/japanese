@@ -19,13 +19,16 @@ public class Function {
 
 	private static final int KOTOBA = 0;
 	private static final int KANJI = 1;
+	private static final int BAI = 7;
+	private static final int SOPHAN = 5;
 	private static final String RANH = "^";
 
 	public static void main(String[] args) throws IOException {
-		int countdown = 1;
 		String kkk = "fdsf,fsf,sdfs,dfsdf,sf,sfsdf,sf,";
 		System.out.println(kkk.substring(0,  kkk.length()-1));
-		(new Function()).importDBFromExcel(9,5,KOTOBA);
+		for (int i = 0; i < SOPHAN; i++){
+			(new Function()).importDBFromExcel(BAI,i,KOTOBA);
+		}
 	}
 
 	public String toJSONKotoba(ArrayList<Kotoba> kotobas){
