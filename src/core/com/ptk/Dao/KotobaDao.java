@@ -12,4 +12,6 @@ public interface KotobaDao extends AbstractDao<Kotoba>{
 
 	Kotoba getById(int id);
 
+	List<Kotoba> getByTypeword(Integer integer);
+
 }

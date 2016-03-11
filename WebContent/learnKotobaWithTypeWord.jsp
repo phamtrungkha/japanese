@@ -6,7 +6,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 	<%
-		String lesson = (String) request.getAttribute("lesson"); 
 		ArrayList<Kotoba> kotobas = (ArrayList<Kotoba>) request.getAttribute("kotobas");
 		String kotobasStr = (new Function()).toJSONKotoba(kotobas);
 		int size = kotobas.size();

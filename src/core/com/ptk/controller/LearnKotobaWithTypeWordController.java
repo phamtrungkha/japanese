@@ -33,8 +33,12 @@ public class LearnKotobaWithTypeWordController extends HttpServlet {
 
 		String typeword = request.getParameter("typeword");
 		List<Kotoba> kotobas = (new KotobaServiceImpl()).getByTypeword(typeword);
-		request.setAttribute("kotobas", kotobas);
-		request.getRequestDispatcher("./learnKotobaWithTypeWord.jsp").forward(request, response);
+		if (kotobas == null)
+			response.sendRedirect("./Error.jsp");
+		else {
+			request.setAttribute("kotobas", kotobas);
+			request.getRequestDispatcher("./learnKotobaWithTypeWord.jsp").forward(request, response);
+		}
 	}
 
 	/**

@@ -37,5 +37,16 @@ public class TypewordServiceImpl extends CommonServiceImpl implements TypewordSe
 		}
 		return result;
 	}
+
+	@Override
+	public void getTypewordList(List<Integer> typewordList, String typewordName) {
+		int twId = typeword.getByName(typewordName).getId();
+		typewordList.add(twId);
+		List<Typeword> child = typeword.getByParent(twId);
+		for (int i = 0; i < child.size(); i++){
+			getTypewordList(typewordList, child.get(i).getName());
+		}
+		return;
+	}
 	
 }

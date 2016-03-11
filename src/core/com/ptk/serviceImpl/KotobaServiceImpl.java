@@ -17,7 +17,7 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 	KotobaDao kotobaDao = new KotobaDaoImpl(con);
 	public List<Kotoba> getByLesson(int[] lessons) {
 
-		List<Kotoba> result  = new ArrayList<>();
+		List<Kotoba> result  = null;
 		for (int i = 0; i < lessons.length; i++){
 			List<Kotoba> kotobai = kotobaDao.getByLesson(lessons[i]);
 			result = appendList(result, kotobai);
@@ -68,7 +68,20 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 	@Override
 	public List<Kotoba> getByTypeword(String typeword) {
 		
-		return null;
+		List<Kotoba> result  = null;
+		List<Integer> typewordList = new ArrayList<>();
+		(new TypewordServiceImpl()).getTypewordList(typewordList, typeword);
+		for (int i = 0; i < typewordList.size(); i++){
+			List<Kotoba> kotobai = kotobaDao.getByTypeword(typewordList.get(i));
+			result = appendList(result, kotobai);
+		}
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

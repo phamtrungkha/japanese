@@ -17,6 +17,7 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 	private static final String SELECT_BY_JP = "SELECT * FROM kotoba WHERE jp = ?";
 	private static final String SELECT_BY_ID = "SELECT * FROM kotoba WHERE id = ?";
 	private static final String SELECT_BY_JP_VN = "SELECT * FROM kotoba WHERE jp = ? and vn = ?";
+	private static final String SELECT_BY_TYPEWORD = "SELECT * FROM kotoba WHERE typeword = ?";
 	Connection con = null;
 	public KotobaDaoImpl(Connection conn) {
 		con = conn;
@@ -151,6 +152,33 @@ public class KotobaDaoImpl extends CommonDaoImpl implements KotobaDao {
 				result.setTypeword((new TypewordDaoImpl(con)).getById(rs.getInt(5)));
 				result.setLesson(rs.getInt(6));
 				result.setIgnoreword(rs.getBoolean(7));
+			}
+			rs.close();
+			pstm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<Kotoba> getByTypeword(Integer integer) {
+		List<Kotoba> result = new ArrayList<>();
+		try {
+			PreparedStatement pstm = con.prepareStatement(SELECT_BY_TYPEWORD);
+			pstm.setInt(1, integer);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()){
+				Kotoba kotoba = new Kotoba();
+				kotoba.setId(rs.getInt(1));
+				kotoba.setJp(rs.getString(2));
+				kotoba.setVn(rs.getString(3));
+				kotoba.setEn(rs.getString(4));
+				kotoba.setTypeword((new TypewordDaoImpl(con)).getById(rs.getInt(5)));
+				kotoba.setLesson(rs.getInt(6));
+				kotoba.setIgnoreword(rs.getBoolean(7));
+				result.add(kotoba);
 			}
 			rs.close();
 			pstm.close();
