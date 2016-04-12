@@ -64,8 +64,8 @@ public class AddKanjiController extends HttpServlet {
 			kanji.setKanji(kj);
 			kanji.setKanjiRoot((new KanjiRootServiceImpl()).getByKanji(kanjiRoot));
 			kanji.setKotoba(kotoba);
-			kanji.setLevel(Integer.parseInt(request.getParameter("level")));
-			(new KanjiServiceImpl()).addKanji(kanji);
+			//kanji.setLevel(Integer.parseInt(request.getParameter("level")));		//need change
+			(new KanjiServiceImpl()).insert(kanji);
 			request.setAttribute("kanjiRoot", request.getParameter("kanjiRoot"));
 			request.setAttribute("level", level);
 			request.getRequestDispatcher("./addKanji.jsp").forward(request, response);

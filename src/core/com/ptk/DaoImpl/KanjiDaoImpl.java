@@ -38,7 +38,7 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 			preparedStatement.setString(1, kanji.getKanji());
 			preparedStatement.setInt(2, kanji.getKotoba().getId());
 			preparedStatement.setInt(3, kanji.getKanjiRoot().getId());
-			preparedStatement.setInt(4, kanji.getLevel());
+			//preparedStatement.setInt(4, kanji.getLevel());		//need change
 			result = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -75,6 +75,7 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 		return 0;
 	}
 
+	// can xoa
 	@Override
 	public List<Kanji> getByLevel(int level) {
 		List<Kanji> result = new ArrayList<>();
@@ -88,7 +89,7 @@ public class KanjiDaoImpl extends CommonDaoImpl implements KanjiDao {
 				kanji.setKanji(rs.getString(2));
 				kanji.setKotoba((new KotobaDaoImpl(con)).getById(rs.getInt(3)));
 				kanji.setKanjiRoot((new KanjiRootDaoImpl(con)).getById(rs.getInt(4)));
-				kanji.setLevel(level);
+				//kanji.setLevel(level);		//need change
 				result.add(kanji);
 			}
 		} catch (SQLException e) {

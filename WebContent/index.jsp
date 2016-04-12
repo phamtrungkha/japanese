@@ -9,5 +9,6 @@
 	<h3>Chọn chương trình cần học:</h3>
 	<a href="./kotoba">Kotoba</a><br/>
 	<a href="./kanji">Kanji</a><br/>
+	<a href="./kanjiRoot">Kanji Root</a><br/>
 </body>
 </html>

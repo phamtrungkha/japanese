@@ -17,7 +17,7 @@ public class KotobaServiceImpl extends CommonServiceImpl implements KotobaServic
 	KotobaDao kotobaDao = new KotobaDaoImpl(con);
 	public List<Kotoba> getByLesson(int[] lessons) {
 
-		List<Kotoba> result  = null;
+		List<Kotoba> result  = new ArrayList<>();
 		for (int i = 0; i < lessons.length; i++){
 			List<Kotoba> kotobai = kotobaDao.getByLesson(lessons[i]);
 			result = appendList(result, kotobai);

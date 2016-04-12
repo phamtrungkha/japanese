@@ -14,7 +14,8 @@ import core.com.ptk.entity.Kanji;
 import core.com.ptk.entity.Typeword;
 
 public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
-	
+
+	private static final String SELECT_BY_LEVEL = "SELECT * FROM kanji_root WHERE level = ?";
 	private static final String SELECT_BY_KANJI = "SELECT * FROM kanji_root WHERE kanji = ?";
 	private static final String SELECT_BY_ID = "SELECT * FROM kanji_root WHERE id = ?";
 	Connection con = null;
@@ -22,7 +23,7 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 		con = conn;
 	}
 
-	private final String INSERT = "INSERT INTO kanji_root(kanji, hantu, amon, amkun, mota) VALUES(?,?,?,?,?)";
+	private final String INSERT = "INSERT INTO kanji_root(kanji, hantu, amon, amkun, mota, level) VALUES(?,?,?,?,?,?)";
 	@Override
 	public List<KanjiRoot> getAll() {
 		// TODO Auto-generated method stub
@@ -41,6 +42,7 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 			preparedStatement.setString(3, kanjiRoot.getAmOn());
 			preparedStatement.setString(4, kanjiRoot.getAmKun());
 			preparedStatement.setString(5, kanjiRoot.getMoTa());
+			preparedStatement.setInt(6, kanjiRoot.getLevel());
 			result = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -121,5 +123,29 @@ public class KanjiRootDaoImpl extends CommonDaoImpl implements KanjiRootDao {
 		
 		return result;
 	}
-
+	
+	@Override
+	public List<KanjiRoot> getByLevel(int level) {
+		List<KanjiRoot> result = new ArrayList<>();
+		try {
+			PreparedStatement pstm = con.prepareStatement(SELECT_BY_LEVEL);
+			pstm.setInt(1, level);
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()){
+				KanjiRoot kanjiRoot = new KanjiRoot();
+				kanjiRoot.setId(rs.getInt(1));
+				kanjiRoot.setKanji(rs.getString(2));
+				kanjiRoot.setHanTu(rs.getString(3));
+				kanjiRoot.setAmOn(rs.getString(4));
+				kanjiRoot.setAmKun(rs.getString(5));
+				kanjiRoot.setMoTa(rs.getString(6));
+				kanjiRoot.setLevel(level);
+				result.add(kanjiRoot);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }

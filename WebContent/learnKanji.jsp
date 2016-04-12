@@ -7,6 +7,7 @@
 <html>
 	<%
 		//String level = (String) request.getAttribute("level"); 
+		final int BLOCK = 50;
 		ArrayList<Kanji> kanjis = (ArrayList<Kanji>) request.getAttribute("kanjis");
 		String kanjisStr = (new Function()).toJSONKanji(kanjis);
 		int size = kanjis.size();
@@ -48,6 +49,9 @@
 		#option {
 			padding-left: 20px;
 		}
+		#fromLG {
+			font-size: 50px;
+		}
 		</style>
 		<script type="text/javascript">
 			var kanjis = "<%=kanjisStr%>";
@@ -83,15 +87,15 @@
 						end = scope-1;
 						remainWord = <%=size%>;
 					}
-					else if (scope == <%=size/25%>){
-						start = scope*25;
+					else if (scope == <%=size/BLOCK%>){
+						start = scope*<%=BLOCK%>;
 						end = <%=size%>-1;
-						remainWord = <%=size%> - scope*25;
+						remainWord = <%=size%> - scope*<%=BLOCK%>;
 					}
 					else {
-						start = scope*25;
-						end = start + 24;
-						remainWord = 25;
+						start = scope*<%=BLOCK%>;
+						end = start + <%=BLOCK-1%>;
+						remainWord = <%=BLOCK%>;
 					}
 					$("#remainWord").text(remainWord);
 			    });
@@ -216,10 +220,10 @@
 						  	<select id="group" name="group">
 						  		<option value="<%=size%>">all</option>
 				  			<%
-				  				for (int i = 0; i < size/25; i++){%>
-				  					<option value="<%=i%>"><%=i*25 %> - <%=i*25+24 %></option>
+				  				for (int i = 0; i < size/BLOCK; i++){%>
+				  					<option value="<%=i%>"><%=i*BLOCK %> - <%=i*BLOCK+(BLOCK-1) %></option>
 				  			<%	}%>
-				  				<option value="<%=size/25%>"><%=size/25*25 %> - <%=size-1 %></option>
+				  				<option value="<%=size/BLOCK%>"><%=size/BLOCK*BLOCK %> - <%=size-1 %></option>
 							</select><br/>
 						</td>
 					</tr>

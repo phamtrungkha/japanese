@@ -8,7 +8,6 @@ public class Kanji implements Serializable{
 	private String kanji;
 	private Kotoba kotoba;
 	private KanjiRoot kanjiRoot;
-	private int level;
 
 	public int getId() {
 		return id;
@@ -33,11 +32,5 @@ public class Kanji implements Serializable{
 	}
 	public void setKanjiRoot(KanjiRoot kanjiRoot) {
 		this.kanjiRoot = kanjiRoot;
-	}
-	public int getLevel() {
-		return level;
-	}
-	public void setLevel(int level) {
-		this.level = level;
 	}
 }

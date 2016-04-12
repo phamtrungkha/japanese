@@ -10,6 +10,7 @@ public class KanjiRoot implements Serializable{
 	private String amOn;
 	private String amKun;
 	private String moTa;
+	private int level;
 
 	public int getId() {
 		return id;
@@ -46,5 +47,11 @@ public class KanjiRoot implements Serializable{
 	}
 	public void setMoTa(String moTa) {
 		this.moTa = moTa;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

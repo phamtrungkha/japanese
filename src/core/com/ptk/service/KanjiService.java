@@ -4,5 +4,5 @@ import core.com.ptk.entity.Kanji;
 
 public interface KanjiService {
 
-	void addKanji(Kanji kanji);
+	int insert(Kanji kanji);
 }
